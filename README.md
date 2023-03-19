@@ -7,21 +7,29 @@ Benutzung des Hochzeitsprojekts --> verheiraten von Trajektorienberechnung und R
 
 
 - Trajektorienplanung
-	--> in leader_move_node.cpp: Aufruf mit *rosrun hochzeit leader_move_node*
+	
+    --> in leader_move_node.cpp: Aufruf mit *rosrun hochzeit leader_move_node*
 	
 	--> soll position wird in den jeweiligen Funktionen berechnet und auch dort direkt gepublished
-	--> bei Trajektorien-Start die Trajektorie initialisieren --> die werden an die jeweiligen Funktionen übertragen
-	--> zum Testen am besten keine Funktion laufen lassen, sondern mit "stationären Koordinaten" arbeiten
+	
+    --> bei Trajektorien-Start die Trajektorie initialisieren --> die werden an die jeweiligen Funktionen übertragen
+	
+    --> zum Testen am besten keine Funktion laufen lassen, sondern mit "stationären Koordinaten" arbeiten
 	
 	
 	
 - Soll-Ist-Regler
-	--> in hochzeit.cpp: Aufruf mit *rosrun hochzeit node*
+	
+    --> in hochzeit.cpp: Aufruf mit *rosrun hochzeit node*
 	
 	--> hier wird der Regler aufgerufen, der die Soll-Position mit der Ist-Position vergleicht
-	--> Soll-Position heißt: targetValLeader
-	--> Ist-Position heißt: currentValLeader
 	
+    --> Soll-Position heißt: targetValLeader
+	
+    --> Ist-Position heißt: currentValLeader
+	
+
+
 
 
 	

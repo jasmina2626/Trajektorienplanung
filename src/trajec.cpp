@@ -130,7 +130,7 @@ int circleT(float _velocity, float _radius, float _angle, bool _cw, float &x_sta
 
         
         
-        ros::sM_PInOnce();
+        ros::spinOnce();
         loop_rate.sleep();
 
         //Ausgleichsbedingungen, falls mehr als 360° gefahren wurden
@@ -164,7 +164,7 @@ int circleT(float _velocity, float _radius, float _angle, bool _cw, float &x_sta
 
     //Hier war Ausgleichbedingung für mehr als 360°    
 
-    ros::sM_PInOnce();
+    ros::spinOnce();
     loop_rate.sleep();
 
     

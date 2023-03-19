@@ -16,6 +16,8 @@
 #include "P2P_controller.cpp"
 #include "linDinOut.cpp"
 
+#include "ellipse.h"
+
 
 
 std::vector<std::string>& seperateString(std::string toSeperate, const char *seperator) {
@@ -68,6 +70,8 @@ void callback_robot1pose(const unicyclesim::Pose::ConstPtr& msg)
 int main(int argc, char **argv)
 {
     
+    degreeToRad(23);
+
     ros::init(argc, argv, "hochzeit_subscribe");
     
 

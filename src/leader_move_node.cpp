@@ -6,8 +6,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-//#include "trajec.cpp"
-#include "ellipse.cpp"
+#include "trajec.h"
 
 
 #include <string>
@@ -69,7 +68,7 @@ int main(int argc, char **argv)
         //lineT(0.1, 1, x, y, theta, pub);
 
         //ellipse(0.1, 1.25, 0.5, 360, false, x, y, theta, pub);
-        ellipse(0.1, 1.25, 0.5, 90, true, x, y, theta, pub);
+        ellipse(0.1, 1.25, 0.5, 360, true, x, y, theta, pub);
 
 
 
@@ -94,7 +93,7 @@ int main(int argc, char **argv)
 
 
         //While-Schleife, um Trajektorien-Ende zu senden
-        while(((0.5 - (t1-t0)) >= 0) && ros::ok())
+        while(((1.5 - (t1-t0)) >= 0) && ros::ok())
         {  
             t1 = ros::Time::now().toSec();
             ende.publish(msgEnde);

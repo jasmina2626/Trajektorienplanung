@@ -1,22 +1,4 @@
-#pragma once
-
-
-#include <iostream>
-#include <cmath>
-
-
-
-#include "ros/ros.h"
-#include "std_msgs/String.h"
-#include "geometry_msgs/Twist.h"
-#include "geometry_msgs/Pose2D.h"
-#include "math.h"
-
-#include "unicyclesim/Spawn.h"
-#include "unicyclesim/Kill.h"
-#include "unicyclesim/SetPen.h"
-#include "unicyclesim/Pose.h"
-#include <sstream>
+#include "ellipse.h"
 
 
 
@@ -31,16 +13,16 @@ double radToDegree(double angle){
 }
 double integral(double(*f)(double x, double y), double(*g)(double x), double(*h)(double x), double a, double b, int n, double a_ellipse, double b_ellipse)
 {
-    double step = (b - a)/n; // width of rectangle
-    double area = 0.0;
-    double y = 0;  // height of rectangle
+    double step = (b - a)/n; //Weite des Rechtecks
+    double area = 0.0; //Fläche unter dem Graphen
+    double y = 0;  //Höhe des Rechtecks
 
     for(int i = 0; i < n; ++i)
     {
         double x = a + (i + 0.5) * step;  //Integrationsvariable
         y = f(((f(g(x),2) * b_ellipse * b_ellipse) + (a_ellipse * a_ellipse * f(h(x),2))), 0.5);
 
-        area += y * step; // find the area of the rectangle and add it to the previous area. Effectively summing up the area under the curve.
+        area += y * step; //Addieren des aktuellen Rechtecks zur vorherigen Fläche --> damit wird die Fläche unter der Kurve addiert
     }
 
     return area;
@@ -95,7 +77,6 @@ double segmentEllipse(const double& a, const double& b, const int& angle, const 
     if(angleRad == (3*M_PI)/2 || (angleRad < 2*M_PI && angleRad > (3*M_PI)/2)) segment = (3*umfangGesamt)/4 + segmentBW; //270° <= Winkel < 360°
     if(angleRad == 2*M_PI) segment = umfangGesamt;  //360° = Winkel
 
-    //std::cout << "segmentEllipse: " << segment << std::endl;
 
     return segment;
 }
@@ -157,8 +138,8 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
     float current_angle = 0, angle_previous = 0;
 
     //_angle = wie weit die Ellipse gefahren werden soll
-    float speed = _velocity * (_angle/bogenlaenge);            //Speed in °/sec to make circle  
-    float angular_speed = speed * 2 * M_PI / 360;              //convert in radian/sec
+    float speed = _velocity * (_angle/bogenlaenge);            //Geschwindigkeit in °/sec um den Kreis zu fahren
+    float angular_speed = speed * 2 * M_PI / 360;              //konvertieren in rad/sec
 
     l_UK = M_PI * _a * (_angle/180);    //Bogenlänge des Umkreises für _angle
     l_IK = M_PI * _b * (_angle/180);    //Bogenlänge des Inkreises für _angle
@@ -166,8 +147,8 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
     v_IK = l_IK / time;                 //Geschwindigkeit m/s vom Inkreis
 
 
-    float speed_UK = (v_UK * (_angle/l_UK)) * 2 * M_PI / 360;    //Speed in rad/sec to make circle 
-    float speed_IK = (v_IK * (_angle/l_IK)) * 2 * M_PI / 360;    //Speed in rad/sec to make circle 
+    float speed_UK = (v_UK * (_angle/l_UK)) * 2 * M_PI / 360;    //Geschwindigkeit in rad/sec um den Kreis zu fahren 
+    float speed_IK = (v_IK * (_angle/l_IK)) * 2 * M_PI / 360;    //Geschwindigkeit in rad/sec um den Kreis zu fahren 
 
 
     double x_start_calc = 0, y_start_calc = 0, x_start_calc_rotated = 0, y_start_calc_rotated = 0, x_start_calc_ohne_offset = 0, y_start_calc_ohne_offset = 0;
@@ -201,13 +182,13 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
         else if((x_calc_ohne_offset) < 0 && (y_calc_ohne_offset) < 0) //3.Quadrant --> +PI
             theta = atan(m) + 2*M_PI + omega;
         
-        else if((x_calc_ohne_offset) > 0 && (y_calc_ohne_offset) < 0) //4.Quadrant --> passt wie es ist :) <3 (eigentlich -PI)
+        else if((x_calc_ohne_offset) > 0 && (y_calc_ohne_offset) < 0) //4.Quadrant --> (eigentlich -PI)
             theta = atan(m) + omega;
 
 
 
         /*
-            1. x_start_calc_rotated ist die Start-x-Koordinate bei einer horizontalen ellipse ohne Offset (d.h. schon rotiert)
+            1. x_start_calc_rotated ist die Start-x-Koordinate bei einer horizontalen Ellipse ohne Offset (d.h. schon rotiert)
             2. von dort aus die Ellipse theoretisch starten und fahren lassen --> d.h. es braucht keinen Drehwinkel bzw. kein thetaRad --> x"soll" berechnet ohne Offset
             3. das Ergebnis wieder rotieren
             4. auf das Ergebnis dann den Offset (MP) addieren
@@ -300,6 +281,8 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
 
 
 
+//verschiedene Ausgabemöglichkeiten
+
     std::cout << "x: " << x << "     y: " << y << "     theta: " << radToDegree(theta) << std::endl;
     std::cout << "xM: " << x_m << "     yM: " << y_m  << std::endl;
     //std::cout << "x_start_calc: " << x_start_calc << "     y_start_calc: " << y_start_calc << std::endl;
@@ -307,6 +290,7 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
     //std::cout << "x_start_calc_ro: " << x_start_calc_rotated << "     y_start_calc_ro: " << y_start_calc_rotated << std::endl;
 
 
+//Anpassen der aktuellen Position --> für nächste Funktion wichtig, da die Werte als Referenz übergeben werden
     x_start = x;
     y_start = y;
     theta_start = radToDegree(theta);

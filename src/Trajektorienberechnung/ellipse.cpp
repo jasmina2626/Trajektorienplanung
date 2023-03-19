@@ -2,15 +2,6 @@
 
 
 
-
-double degreeToRad(double angle){
-    double _angle = (angle/360) * 2*M_PI;
-    return _angle;
-}
-double radToDegree(double angle){
-    double _angle = (angle*360)/(M_PI*2);
-    return _angle;
-}
 double integral(double(*f)(double x, double y), double(*g)(double x), double(*h)(double x), double a, double b, int n, double a_ellipse, double b_ellipse)
 {
     double step = (b - a)/n; //Weite des Rechtecks
@@ -81,32 +72,50 @@ double segmentEllipse(const double& a, const double& b, const int& angle, const 
     return segment;
 }
 
-double neededTime(double _v, double _l)
-{
-    double time = _l/_v;
-    return time;
-}
-
 
 
 int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &x_start, float &y_start, float &theta_start, ros::Publisher &chatter_pub)
 {
+    std_msgs::String msgString;
+    
+    //x, y und theta sind die Sollwerte um den Kreis zu fahren!
+    //x_m und y_m sind die Koordinaten des Kreismittelpunkts
     double x = 0, y = 0, theta = 0, alpha = 0, l_UK = 0, l_IK = 0;
     float x_m = 0, y_m = 0;
     
 
-    float thetaRad = degreeToRad(theta_start);
+    float thetaRad = degreeToRad(theta_start); //theta_start wird in Rad in thetaRad gespeichert
+    float current_angle = 0, angle_previous = 0; //Benötigt, um die Winkeldifferenz in der while-Schleife zu berechnen
+    double t0, t1, m;  //t0 und t1 = Zeitvariablen --> t0 ist Startzeit; m = Steigung an Tangente durch Punkt auf Ellipse
     
+
+    double circumference = segmentEllipse(_a, _b, _angle, 1000); //Bogenlänge mithilfe von Segmentfunktion errechnen
+    double time = neededTime(_velocity, circumference); //Umlaufzeit berechnen
+    double v_UK = 0, v_IK = 0; //Geschwindigkeiten von Um- und Inkreis in m/s
+    double speed_UK = 0, speed_IK = 0; //Geschwindigkeit in rad/sec um den Um- und Inkreis zu fahren 
+
+
+    //_angle = wie weit die Ellipse gefahren werden soll
+    float speed = _velocity * (_angle/circumference); //Geschwindigkeit in °/sec um den Kreis zu fahren
+    float angular_speed = speed * 2 * M_PI / 360; //konvertieren in rad/sec
+
+
+    //Variablen für Rotationsmatrix
+    double x_start_calc = 0, y_start_calc = 0, x_start_calc_rotated = 0, y_start_calc_rotated = 0, x_start_calc_ohne_offset = 0, y_start_calc_ohne_offset = 0;
+    double x_calc_ohne_offset = 0, y_calc_ohne_offset = 0, x_rotated = 0, y_rotated = 0;
+
+    //Hilfsvariablen
+    int count = 0;
+    float omega = 0;
     
-    double bogenlaenge = segmentEllipse(_a, _b, _angle, 1000);
-    double time = neededTime(_velocity, bogenlaenge);
-    double v_UK = 0, v_IK = 0;
-    std_msgs::String msgString;
+
 
     x = _a * cos(thetaRad);
     y = _b * sin(thetaRad);
     
-    std::cout << "x: " << x_start << "   y: " << y_start << "  phi: " << theta_start << std::endl;
+    
+//Ausgabemöglichkeit
+    //std::cout << "x: " << x_start << "   y: " << y_start << "  theta_start: " << theta_start << std::endl;
 
     
     if (_cw)
@@ -117,9 +126,6 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
     {
         alpha = radToDegree(atan((_a/_b)*tan(degreeToRad(theta_start - 90))));
     }
-
-
-    theta_start = degreeToRad(theta_start);
 
 
     //Mittelpunktbestimmung
@@ -135,37 +141,22 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
     }
 
 
-    float current_angle = 0, angle_previous = 0;
-
-    //_angle = wie weit die Ellipse gefahren werden soll
-    float speed = _velocity * (_angle/bogenlaenge);            //Geschwindigkeit in °/sec um den Kreis zu fahren
-    float angular_speed = speed * 2 * M_PI / 360;              //konvertieren in rad/sec
-
     l_UK = M_PI * _a * (_angle/180);    //Bogenlänge des Umkreises für _angle
     l_IK = M_PI * _b * (_angle/180);    //Bogenlänge des Inkreises für _angle
     v_UK = l_UK / time;                 //Geschwindigkeit m/s vom Umkreis
     v_IK = l_IK / time;                 //Geschwindigkeit m/s vom Inkreis
 
 
-    float speed_UK = (v_UK * (_angle/l_UK)) * 2 * M_PI / 360;    //Geschwindigkeit in rad/sec um den Kreis zu fahren 
-    float speed_IK = (v_IK * (_angle/l_IK)) * 2 * M_PI / 360;    //Geschwindigkeit in rad/sec um den Kreis zu fahren 
+    speed_UK = (v_UK * (_angle/l_UK)) * 2 * M_PI / 360;    //Geschwindigkeit in rad/sec um den Kreis zu fahren 
+    speed_IK = (v_IK * (_angle/l_IK)) * 2 * M_PI / 360;    //Geschwindigkeit in rad/sec um den Kreis zu fahren 
 
 
-    double x_start_calc = 0, y_start_calc = 0, x_start_calc_rotated = 0, y_start_calc_rotated = 0, x_start_calc_ohne_offset = 0, y_start_calc_ohne_offset = 0;
-    double x_calc_ohne_offset = 0, y_calc_ohne_offset = 0;
-
-
-    double t0, t1, m;  //m = Steigung an Tangente durch Punkt auf Ellipse
     t0 = t1 = ros::Time::now().toSec();
-
-
-    int count = 0;
-    float omega = 0;
     omega = thetaRad - M_PI/2;
 
 
     //While-Schleife, um Soll x, y und theta-Werte zu berechnen
-    while(((time - (t1-t0)) >= 0) && ros::ok())
+    while(((time - (t1-t0)) >= 0) && ros::ok()) //Schleife, um Soll-Koordinaten zu berechnen --> läuft solange, bis errechnete Umlaufzeit vorbei ist
     {
         t1 = ros::Time::now().toSec();
         current_angle = speed_UK * (t1 - t0);  //entspricht aktuellem alpha --> für Um- und Inkreis identisch
@@ -208,8 +199,8 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
             y_calc_ohne_offset = _b * sin(-current_angle);
             
             //3.
-            double x_rotated = x_calc_ohne_offset * cos(thetaRad + M_PI/2) - y_calc_ohne_offset * sin(thetaRad + M_PI/2);
-            double y_rotated = x_calc_ohne_offset * sin(thetaRad + M_PI/2) + y_calc_ohne_offset * cos(thetaRad + M_PI/2);
+            x_rotated = x_calc_ohne_offset * cos(thetaRad + M_PI/2) - y_calc_ohne_offset * sin(thetaRad + M_PI/2);
+            y_rotated = x_calc_ohne_offset * sin(thetaRad + M_PI/2) + y_calc_ohne_offset * cos(thetaRad + M_PI/2);
             
             //4.
             x = x_rotated + x_m;
@@ -231,14 +222,13 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
             y_calc_ohne_offset = _b * sin(current_angle);
                 
             //3.
-            double x_rotated = x_calc_ohne_offset * cos(thetaRad - M_PI/2) - y_calc_ohne_offset * sin(thetaRad - M_PI/2);
-            double y_rotated = x_calc_ohne_offset * sin(thetaRad - M_PI/2) + y_calc_ohne_offset * cos(thetaRad - M_PI/2);
+            x_rotated = x_calc_ohne_offset * cos(thetaRad - M_PI/2) - y_calc_ohne_offset * sin(thetaRad - M_PI/2);
+            y_rotated = x_calc_ohne_offset * sin(thetaRad - M_PI/2) + y_calc_ohne_offset * cos(thetaRad - M_PI/2);
                 
             //4.
             x = x_rotated + x_m;
             y = y_rotated + y_m;
           }
-
 
 
         angle_previous = current_angle;
@@ -252,11 +242,7 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
 
 
 
-
-
-
-//Ausgabe der berechneten Position
-
+//Ausgleichsbedingung für theta --> nicht unbedingt nötig
         while((theta < 0) || (theta > 2*M_PI))
         {
             if(theta < 0)
@@ -265,14 +251,11 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
                 theta -= 2*M_PI;
         }
         
-
+//Ausgabemöglichkeit
         if(count%10000 == 0)
             //std::cout << "x: " << x << "     y: " << y << "     theta: " << radToDegree(theta) << "     omega: " << radToDegree(omega) << std::endl;
         
-
         count++;
-
-
     }
 
 

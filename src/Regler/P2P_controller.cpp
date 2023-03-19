@@ -1,7 +1,4 @@
-#include "ros/ros.h"
-#include "std_msgs/String.h"
-#include "geometry_msgs/Twist.h"
-#include "geometry_msgs/Pose2D.h"
+#include "P2P_controller.h"
 
 /*
 v: Lineargeschwindigkeit

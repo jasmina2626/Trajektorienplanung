@@ -10,13 +10,13 @@
 #include <vector>
 #include <cstring>
 #include <math.h>
+#include <cmath>
 
-#include "init.cpp"
-#include "li_controller.cpp"
-#include "P2P_controller.cpp"
-#include "linDinOut.cpp"
+#include "utility.h"
+#include "init_leader.h"
+#include "P2P_controller.h"
+#include "linDinOut.h"
 
-#include "ellipse.h"
 
 
 
@@ -69,9 +69,6 @@ void callback_robot1pose(const unicyclesim::Pose::ConstPtr& msg)
 
 int main(int argc, char **argv)
 {
-    
-    degreeToRad(23);
-
     ros::init(argc, argv, "hochzeit_subscribe");
     
 
@@ -80,7 +77,7 @@ int main(int argc, char **argv)
 
     float x_leader = 0.884;
     float y_leader = 0.884;
-    float theta_leader = (120/180.0)*PI; //in Rad angeben!
+    float theta_leader = degreeToRad(120); //in Grad angeben!
 
 
     // -------------------->  Ende
@@ -124,11 +121,6 @@ int main(int argc, char **argv)
         //P2P-Regler
         twistLeader.linear.x = (v(10, currentValLeader.x, currentValLeader.y, targetValLeader.x, targetValLeader.y)) * ((float)(count*count)/1'000'000);
         twistLeader.angular.z = w(10, currentValLeader.x, currentValLeader.y, currentValLeader.theta, targetValLeader.x, targetValLeader.y) * ((float)(count*count)/1'000'000);
-
-
-        //Li-Regler:
-        //twistLeader.linear.x = vF(k1, k2, currentValLeader.x, targetValLeader.x, currentValLeader.y, targetValLeader.y, phi, ld, targetValLeader.theta, currentValLeader.theta, distance, twistLeader.angular.z, twistLeader.linear.x);
-        //twistLeader.angular.z = wF(k1, k2, currentValLeader.x, targetValLeader.x, currentValLeader.y, targetValLeader.y, phi, ld, targetValLeader.theta, currentValLeader.theta, distance, twistLeader.angular.z, twistLeader.linear.x);
 
 
         pubTwistLeader.publish(twistLeader);

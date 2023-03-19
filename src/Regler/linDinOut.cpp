@@ -1,12 +1,4 @@
-#include "ros/ros.h"
-#include "std_msgs/String.h"
-#include "geometry_msgs/Twist.h"
-#include "geometry_msgs/Pose2D.h"
-
-#include <iomanip>
-
-#include <vector>
-using namespace std;
+#include "linDinOut.h"
 
 
 /*

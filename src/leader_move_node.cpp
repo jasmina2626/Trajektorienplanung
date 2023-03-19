@@ -20,15 +20,8 @@
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "soll_publisher");
-    ros::Duration five_seconds(5.0);
-
-    double t0, t1;
-    
     ros::NodeHandle n;
     ros::Publisher pub = n.advertise<std_msgs::String>("soll_publish", 1000);
-    
-    
-    //KP ob sinnvoll, noch eine Ende Bedingung so zu publishen und zu subscriben
     ros::Publisher ende = n.advertise<std_msgs::String>("soll_ende", 10, true);
     
     ros::Rate loop_rate(50);
@@ -37,7 +30,7 @@ int main(int argc, char **argv)
     std_msgs::String msg2, msgEnde;
     
     int end = 1;
-    
+    double t0, t1;
 
     msgEnde.data = "1";
     ende.publish(msgEnde);
@@ -50,8 +43,6 @@ int main(int argc, char **argv)
     float y = 0.884; 
     float theta = 120; //In GRAD angeben!!
 
-
-
     while (ros::ok() && end)
     {
         
@@ -62,10 +53,10 @@ int main(int argc, char **argv)
 
         // ------------------> Hier die Trajektorie planen ---> msg Daten als Referenz übergeben!!
 
-        //circleT(0.1, 0.5, 180, false, x, y, theta, pub);
-        //lineT(0.1, 1, x, y, theta, pub);
-        //circleT(0.1, 0.5, 180, false, x, y, theta, pub);
-        //lineT(0.1, 1, x, y, theta, pub);
+        //circle(0.1, 0.5, 180, false, x, y, theta, pub);
+        //line(0.1, 1, x, y, theta, pub);
+        //circle(0.1, 0.5, 180, false, x, y, theta, pub);
+        //line(0.1, 1, x, y, theta, pub);
 
         //ellipse(0.1, 1.25, 0.5, 360, false, x, y, theta, pub);
         ellipse(0.1, 1.25, 0.5, 360, true, x, y, theta, pub);
@@ -74,21 +65,10 @@ int main(int argc, char **argv)
 
         // -----------------> Trajektorienplanung ENDE
 
-                
-        //msg.x = x;
-        //msg.y = y;
-        //msg.theta = degreeToRad(theta);  //Hier wird RAD gebraucht
-//
-        //std::stringstream ss;
-        //ss << msg.x << "," << msg.y << "," << msg.theta;
-        //msg2.data = ss.str();
-        //pub.publish(msg2);
 
 
         msgEnde.data = "0";
-
         std::cout << "\nsende Ende";
-
         t0 = t1 = ros::Time::now().toSec();
 
 

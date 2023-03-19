@@ -38,14 +38,19 @@ catkin_package(
 ## Your package locations should be listed before other locations
 include_directories(
   include/hochzeit
+  include/hochzeit/Trajektorienberechnung
+  include/hochzeit/Regler
   ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable( hochzeit_node src/hochzeit.cpp 
-                src/li_controller.h)
+add_executable( hochzeit_node src/hochzeit.cpp
+                src/Trajektorienberechnung/utility.cpp 
+                src/Regler/P2P_controller.cpp
+                src/Regler/linDinOut.cpp
+                src/init_leader.cpp)
 #add_executable(leader_move_node src/leader_move_node.cpp)
 
 ## Specify libraries to link a library or executable target against
@@ -57,9 +62,10 @@ target_link_libraries(hochzeit_node
 ##target_link_libraries(follower_regler ${catkin_LIBRARIES})
 
 
-add_executable(leader_move_node src/leader_move_node.cpp 
-                                src/ellipse.cpp 
-                                src/circle.cpp 
-                                src/line.cpp)
+add_executable(leader_move_node src/leader_move_node.cpp
+                                src/Trajektorienberechnung/utility.cpp
+                                src/Trajektorienberechnung/ellipse.cpp 
+                                src/Trajektorienberechnung/circle.cpp 
+                                src/Trajektorienberechnung/line.cpp)
 target_link_libraries(leader_move_node ${catkin_LIBRARIES})
 

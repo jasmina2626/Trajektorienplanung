@@ -13,90 +13,61 @@
 #include <cmath>
 
 #include "utility.h"
+//#include "utility_hochzeit.h"
 #include "init_leader.h"
 #include "P2P_controller.h"
 #include "linDinOut.h"
 
 
+//Hier befindet sich die Regelung für den Leader-Roboter
+//Außerdem gibt man hier die Start-Koordinaten für den Leader-Roboter vor
+//Der Ausführung zum spawnen des Leader-Roboters findet man in "init_leader.h"
 
 
-std::vector<std::string>& seperateString(std::string toSeperate, const char *seperator) {
-    static std::vector<std::string> result;
-    result.clear();
-    char* dataAsPointer = &toSeperate[0];
-    char* token = strtok(dataAsPointer, seperator);
-    result.push_back(token);
-    
-    while(token != NULL) {
-        token = strtok(NULL, seperator);
-        if(token != NULL) result.push_back(token);
-    }
-    
-    return result;
-}
-
-geometry_msgs::Pose2D targetValLeader; //--> wird zum Sollwert von x, y und theta
+//currentValLeader = Istposition Leader
+//targetValLeader = Sollposition Leader (kommt aus Trajektorienplanung)
+geometry_msgs::Pose2D targetValLeader;
 std::vector<std::string> vecCurrent;
-unicyclesim::Pose currentValLeader; //--> wird zum aktuellen Wert von x, y und theta
-int ende = 1; //dient zum beenden der while-Schleife unten
+unicyclesim::Pose currentValLeader;
+int ende = 1; //dient zum Beenden des Reglers nach Trajektorienende
 
 
-void updateString(const std_msgs::String::ConstPtr& msg)
-{
-  int count = 0;
-  vecCurrent = seperateString(msg->data.c_str(), ",");
-
-  targetValLeader.x = std::stof(vecCurrent[0]);
-  targetValLeader.y = std::stof(vecCurrent[1]);
-  targetValLeader.theta = std::stof(vecCurrent[2]);
-}
-
-
-void updateEnde(const std_msgs::String::ConstPtr& msg)
-{
-  ende = std::stoi(msg->data.c_str());
-  std::cout << "ende = " << ende << std::endl;
-}
-
-
-void callback_robot1pose(const unicyclesim::Pose::ConstPtr& msg)
-{
-  currentValLeader.x = msg->x;
-  currentValLeader.y = msg->y;
-  currentValLeader.theta = msg->theta;
-}
+std::vector<std::string>& seperateString(std::string toSeperate, const char *seperator);
+void updateString(const std_msgs::String::ConstPtr& msg);
+void updateEnde(const std_msgs::String::ConstPtr& msg);
+void callback_robot1pose(const unicyclesim::Pose::ConstPtr& msg);
 
 
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "hochzeit_subscribe");
     
+    
 
     // --------------------> Leader-Koordinaten festlegen zum Spawnen
-
 
     float x_leader = 0.884;
     float y_leader = 0.884;
     float theta_leader = degreeToRad(120); //in Grad angeben!
 
-
-    // -------------------->  Ende
-
+    // -------------------->  Ende der Koordinatenplanung
 
 
-    starts_init(x_leader, y_leader, theta_leader);
+    starts_init(x_leader, y_leader, theta_leader); //Spawnen des Leader-Roboters mit den oben angegebenen Koordinaten
 
 
     ros::NodeHandle node;
+
+    //subscriben der Soll-Position für den Leader-Roboter
     ros::Subscriber subSoll = node.subscribe("soll_publish", 100, updateString);
-    
-  
+
+    //subscriben des Trajektorien-Endes
     ros::Subscriber endeSoll = node.subscribe("soll_ende", 1, updateEnde);
 
-    // subscribe pose data with type unicyclesim::Pose on topic "/robotX/pose" with queque size 1
+    //subscribe der Ist-Position des Leader-Roboters
     ros::Subscriber subPose1 = node.subscribe("/robot1/pose", 1, callback_robot1pose);
 
-    // publish data with type geometry_msgs::Twist on topic "/robotX/cmd_vel" with queque size 1
+    //publishen der errechneten linearen und angularen Geschwindigkeit des Leader-Roboters
     ros::Publisher pubTwistLeader = node.advertise<geometry_msgs::Twist>("/robot1/cmd_vel", 1);
 
     geometry_msgs::Twist twistLeader;
@@ -106,14 +77,11 @@ int main(int argc, char **argv)
     float test = 0.1;
 
     
-    
-    //currentValLeader = Istposition Leader
-    //targetValLeader = Sollposition Leader (kommt aus Trajektorienplanung)
 
     while (ros::ok() && ende) // while roscore is running
     {
 
-        //Master-Regler
+        //LinDinOut-Regler
         //twistLeader.linear.x = leader(targetValLeader.theta, targetValLeader.x, targetValLeader.y, currentValLeader.x, currentValLeader.y, currentValLeader.theta, test, test, test, test, 1)[0];
         //twistLeader.angular.z = leader(targetValLeader.theta, targetValLeader.x, targetValLeader.y, currentValLeader.x, currentValLeader.y, currentValLeader.theta, test, test, test, test, 1)[1];
         
@@ -140,4 +108,43 @@ int main(int argc, char **argv)
 
 
     return 0;
+}
+
+
+std::vector<std::string>& seperateString(std::string toSeperate, const char *seperator) {
+    static std::vector<std::string> result;
+    result.clear();
+    char* dataAsPointer = &toSeperate[0];
+    char* token = strtok(dataAsPointer, seperator);
+    result.push_back(token);
+    
+    while(token != NULL) {
+        token = strtok(NULL, seperator);
+        if(token != NULL) result.push_back(token);
+    }
+    
+    return result;
+}
+
+void updateString(const std_msgs::String::ConstPtr& msg)
+{
+  int count = 0;
+  vecCurrent = seperateString(msg->data.c_str(), ",");
+
+  targetValLeader.x = std::stof(vecCurrent[0]);
+  targetValLeader.y = std::stof(vecCurrent[1]);
+  targetValLeader.theta = std::stof(vecCurrent[2]);
+}
+
+void updateEnde(const std_msgs::String::ConstPtr& msg)
+{
+  ende = std::stoi(msg->data.c_str());
+  std::cout << "ende = " << ende << std::endl;
+}
+
+void callback_robot1pose(const unicyclesim::Pose::ConstPtr& msg)
+{
+  currentValLeader.x = msg->x;
+  currentValLeader.y = msg->y;
+  currentValLeader.theta = msg->theta;
 }

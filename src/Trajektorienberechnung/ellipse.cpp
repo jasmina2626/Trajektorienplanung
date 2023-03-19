@@ -78,7 +78,7 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
 {
     std_msgs::String msgString;
     
-    //x, y und theta sind die Sollwerte um den Kreis zu fahren!
+    //x, y und theta sind die Sollwerte um die Ellipse zu fahren!
     //x_m und y_m sind die Koordinaten des Kreismittelpunkts
     double x = 0, y = 0, theta = 0, alpha = 0, l_UK = 0, l_IK = 0;
     float x_m = 0, y_m = 0;
@@ -113,7 +113,7 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
     x = _a * cos(thetaRad);
     y = _b * sin(thetaRad);
     
-    
+
 //Ausgabemöglichkeit
     //std::cout << "x: " << x_start << "   y: " << y_start << "  theta_start: " << theta_start << std::endl;
 

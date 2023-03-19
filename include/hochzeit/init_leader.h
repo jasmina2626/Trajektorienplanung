@@ -14,5 +14,13 @@
 
 #include <sstream>
 
-
+/**
+ * @brief Funktion, um den Leader-Roboter an der gewünschten Anfangsposition zu platzieren
+ * 
+ * @param[out] x_start Gibt die Start-x-Koordinate des Leader-Roboters vor --> an dieser x-Koordinate wird der Roboter platziert
+ * @param[out] y_start Gibt die Start-y-Koordinate des Leader-Roboters vor --> an dieser y-Koordinate wird der Roboter platziert
+ * @param[out] theta_start Gibt die Start-theta-Koordinate des Leader-Roboters vor --> mit diesem Ausrichtungswinkel wird der Roboter platziert
+ * 
+ * @note In dieser Funktion sollte *NICHTS VERÄNDERT* werden
+*/
 int starts_init(float &x_start, float &y_start, float &theta_start);

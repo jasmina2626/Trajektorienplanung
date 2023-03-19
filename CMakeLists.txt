@@ -50,7 +50,9 @@ add_executable( hochzeit_node src/hochzeit.cpp
                 src/Trajektorienberechnung/utility.cpp 
                 src/Regler/P2P_controller.cpp
                 src/Regler/linDinOut.cpp
-                src/init_leader.cpp)
+                src/init_leader.cpp
+               # src/utility_hochzeit.cpp
+               )
 #add_executable(leader_move_node src/leader_move_node.cpp)
 
 ## Specify libraries to link a library or executable target against

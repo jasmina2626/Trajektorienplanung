@@ -8,7 +8,7 @@
  * 
  * @param[in] _velocity [m/s] gibt die Geschwindigkeit in m/s an, mit der der Kreis gefahren werden soll
  * @param[in] _radius [m] gibt den Radius des gefahrenen Kreises in Metern an
- * @param[in] _angle [°] gibt den Winkel in Grad an --> 180 entspricht einem Halbkreis
+ * @param[in] _angle [°] gibt den zu fahrenden Winkel in Grad an --> 180 entspricht einem Halbkreis
  * @param[in] _cw gibt an, ob im oder gegen den Uhrzeigersinn gefahren werden soll [im Uhrzeigersinn = true, Gegen den Uhrzeigersinn = false]
  * @param[out] x_start übergibt die x-Anfangskoordinate der Trajektorie
  * @param[out] y_start übergibt die y-Anfangskoordinate der Trajektorie

@@ -15,7 +15,7 @@
 
 //Hier ist die main() um die Trajektorie des Leaders zu planen
 //In der while-Schleife kann man verschiedene Funktionen aufrufen
-//Die Funktionen die man aufrufen kann findet man in "trajec.cpp"
+//Die Funktionen die man aufrufen kann findet man in "trajec.h"
 
 int main(int argc, char **argv)
 {

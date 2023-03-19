@@ -10,15 +10,17 @@ int starts_init(float &x_start, float &y_start, float &theta_start)
   ros::Publisher pub = n.advertise<std_msgs::String>("spawn_leader", 1000);
   ros::Rate loop_rate(50);
 
-  ros::ServiceClient servSpawn = n.serviceClient<unicyclesim::Spawn>("/sim/spawn");
-  ros::ServiceClient servKill = n.serviceClient<unicyclesim::Kill>("/sim/kill");
-  ros::ServiceClient servPen = n.serviceClient<unicyclesim::SetPen>("/robot1/set_pen");
+  ros::ServiceClient servSpawn = n.serviceClient<unicyclesim::Spawn>("/sim/spawn"); //platzier-Befehl
+  ros::ServiceClient servKill = n.serviceClient<unicyclesim::Kill>("/sim/kill"); //lösch-Befehl
+  ros::ServiceClient servPen = n.serviceClient<unicyclesim::SetPen>("/robot1/set_pen"); //Farbenändern-Befehl
 
 
+  //Falls schon ein Roboter mit dem Namen "robot1" existiert, wird dieser entfernt
   unicyclesim::Kill killMsg;
   killMsg.request.name = "robot1";
   servKill.call(killMsg);
 
+  //Robot1 wird an der vorgegebenen Stelle platziert
   unicyclesim::Spawn spawnMsg;
   spawnMsg.request.x = x_start;
   spawnMsg.request.y = y_start;
@@ -26,6 +28,7 @@ int starts_init(float &x_start, float &y_start, float &theta_start)
   spawnMsg.request.name = "robot1";
   servSpawn.call(spawnMsg);
 
+  //Die Linien-Farbe wird auf rot gesetzt, um den Leader-Roboter besser zu erkennen
   unicyclesim::SetPen penMsg;
   penMsg.request.r = 255;
   penMsg.request.width = 3;
@@ -35,7 +38,7 @@ int starts_init(float &x_start, float &y_start, float &theta_start)
   geometry_msgs::Twist msg;
 
 
-  //wird das noch benötigt?
+  //kurzes Fahren wird benötitg, sonst kommt es zu Performance-Problemen
   while (ros::ok() && (count < duration))
   {
     if(count < duration)

@@ -104,7 +104,7 @@ int main(int argc, char **argv)
         loop_rate.sleep();
     }
   
-    std::cout << "Ist  --> x, y, theta: " << currentValLeader.x << ", " << currentValLeader.y << ", " << currentValLeader.theta << std::endl;
+    std::cout << "Ist  --> x, y, theta: " << currentValLeader.x << ", " << currentValLeader.y << ", " << radToDegree(currentValLeader.theta) << std::endl;
 
 
     return 0;

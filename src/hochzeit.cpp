@@ -75,8 +75,7 @@ int main(int argc, char **argv)
 
     int count = 1;
     float test = 0.1;
-
-    
+  
 
     while (ros::ok() && ende) // while roscore is running
     {
@@ -99,13 +98,11 @@ int main(int argc, char **argv)
             count++;  //Um die Ausgabe zu verringern in if-Bedingung oben && für sinnvolle Beschleunigung
         }
 
-
         ros::spinOnce();
         loop_rate.sleep();
     }
   
     std::cout << "Ist  --> x, y, theta: " << currentValLeader.x << ", " << currentValLeader.y << ", " << radToDegree(currentValLeader.theta) << std::endl;
-
 
     return 0;
 }

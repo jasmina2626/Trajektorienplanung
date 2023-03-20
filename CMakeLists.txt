@@ -46,7 +46,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-add_executable( hochzeit_node src/hochzeit.cpp
+add_executable( ${PROJECT_NAME}_node src/hochzeit.cpp
                 src/Trajektorienberechnung/utility.cpp 
                 src/Regler/P2P_controller.cpp
                 src/Regler/linDinOut.cpp
@@ -56,7 +56,7 @@ add_executable( hochzeit_node src/hochzeit.cpp
 #add_executable(leader_move_node src/leader_move_node.cpp)
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(hochzeit_node
+target_link_libraries(${PROJECT_NAME}_node
   ${catkin_LIBRARIES}
 )
 

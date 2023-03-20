@@ -59,7 +59,7 @@ int main(int argc, char **argv)
         //line(0.1, 1, x, y, theta, pub);
 
         //ellipse(0.1, 1.25, 0.5, 360, false, x, y, theta, pub);
-        ellipse(0.1, 1.25, 0.5, 360, true, x, y, theta, pub);
+        ellipse(0.1, 1.25, 0.5, 60, true, x, y, theta, pub);
 
 
 

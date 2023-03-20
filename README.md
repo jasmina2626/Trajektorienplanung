@@ -20,7 +20,7 @@ Benutzung des Hochzeitsprojekts --> verheiraten von Trajektorienberechnung und R
 	
 - Soll-Ist-Regler
 	
-    --> in hochzeit.cpp: Aufruf mit *rosrun hochzeit node*
+    --> in hochzeit.cpp: Aufruf mit *rosrun hochzeit hochzeit_node*
 	
 	--> hier wird der Regler aufgerufen, der die Soll-Position mit der Ist-Position vergleicht
 	

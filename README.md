@@ -1,7 +1,5 @@
 # Trajektorienplanung
 
-Test :)
-
 Benutzung des Hochzeitsprojekts --> verheiraten von Trajektorienberechnung und Regelung von Leader- und Followerrobotern:
 
 

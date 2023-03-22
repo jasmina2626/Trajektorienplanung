@@ -23,8 +23,8 @@
 /**
  * @brief Funktion, um einen String mit Hilfe von einem Seperator, in einzelne Teile zu zerlegen
  * 
- * @param[in] toSeperate Gibt die Start-x-Koordinate des Leader-Roboters vor --> an dieser x-Koordinate wird der Roboter platziert
- * @param[in] seperator Gibt die Start-y-Koordinate des Leader-Roboters vor --> an dieser y-Koordinate wird der Roboter platziert
+ * @param[in] toSeperate Der String, der nach 'seperator' aufgeteilt werden soll
+ * @param[in] seperator Trennzeichen
  * 
  * @note In dieser Funktion sollte *NICHTS VERÄNDERT* werden
  */
@@ -32,35 +32,34 @@ std::vector<std::string>& seperateString(std::string toSeperate, const char *sep
 
 
 /**
- * @brief Funktion, um die aktuellen Soll-Werte in einer stringmessage zu speichern
+ * @brief Funktion, um die aktuellen Soll-Werte aus einer Stringmessage als double-Werte zu speichern
  * 
- * @param[in] msg Gibt die Start-x-Koordinate des Leader-Roboters vor --> an dieser x-Koordinate wird der Roboter platziert
+ * @param[in] msg Beinhaltet die x, y und theta-Werte als String
  * 
- * @note In dieser Funktion sollte *NICHTS VERÄNDERT* werden, die Funktion dient dazu, um die gepublished-en Sollwerte aus der 
+ * @note In dieser Funktion sollte *NICHTS VERÄNDERT* werden. Die Funktion dient dazu, um die gepublished-en Sollwerte aus der 
  * Trajektorienplanung in die einzelnen double-Werte zu zerlegen
 */
 void updateString(const std_msgs::String::ConstPtr& msg);
 
 
 /**
- * @brief Funktion, um den Leader-Roboter an der gewünschten Anfangsposition zu platzieren
+ * @brief Funktion, um die Variable Ende zu aktualisieren und in einer Stringmessage zu speichern. 
+ * Dies wird benötigt, um den Regler zu stoppen nachdem die Trajketorie zu ende ist.
  * 
- * @param[out] x_start Gibt die Start-x-Koordinate des Leader-Roboters vor --> an dieser x-Koordinate wird der Roboter platziert
- * @param[out] y_start Gibt die Start-y-Koordinate des Leader-Roboters vor --> an dieser y-Koordinate wird der Roboter platziert
- * @param[out] theta_start Gibt die Start-theta-Koordinate des Leader-Roboters vor --> mit diesem Ausrichtungswinkel wird der Roboter platziert
+ * @param[in] msg String, in dem die Variable 'ende' steht
  * 
- * @note In dieser Funktion sollte *NICHTS VERÄNDERT* werden
+ * @note In dieser Funktion sollte *NICHTS VERÄNDERT* werden. Die Funktion dient dazu, um das gepublished-te 'ende' aus der 
+ * Trajektorienplanung zu aktualisieren
 */
 void updateEnde(const std_msgs::String::ConstPtr& msg);
 
 
 /**
- * @brief Funktion, um den Leader-Roboter an der gewünschten Anfangsposition zu platzieren
+ * @brief Funktion, um die aktuelle Ist-Position des Leader-Roboters aus einer Pose-message zu speichern und zu aktualisieren
  * 
- * @param[out] x_start Gibt die Start-x-Koordinate des Leader-Roboters vor --> an dieser x-Koordinate wird der Roboter platziert
- * @param[out] y_start Gibt die Start-y-Koordinate des Leader-Roboters vor --> an dieser y-Koordinate wird der Roboter platziert
- * @param[out] theta_start Gibt die Start-theta-Koordinate des Leader-Roboters vor --> mit diesem Ausrichtungswinkel wird der Roboter platziert
+ * @param[in] msg Pose-Geometrymessage, in dem die Ist-Werte des Leader-Roboters stehen (x, y und theta)
  * 
- * @note In dieser Funktion sollte *NICHTS VERÄNDERT* werden
+ * @note In dieser Funktion sollte *NICHTS VERÄNDERT* werden. Die Funktion dient dazu, um die Ist-Werte vom
+ * Leader-Roboter selbst als Ist-Wert-Grundlage für den Regler zu nutzen
 */
 void callback_robot1pose(const unicyclesim::Pose::ConstPtr& msg);

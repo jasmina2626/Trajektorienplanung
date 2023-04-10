@@ -39,9 +39,9 @@ int main(int argc, char **argv)
 
 
     //init Trajektorien-Start
-    float x = 3;
+    float x = 1;
     float y = 3; 
-    float theta = 0; //In GRAD angeben!!
+    float theta = 90; //In GRAD angeben!!
 
     while (ros::ok() && end)
     {
@@ -59,9 +59,9 @@ int main(int argc, char **argv)
         //line(0.1, 1, x, y, theta, pub);
 
         //ellipse(0.1, 1.25, 0.5, 360, false, x, y, theta, pub);
-        //circle(0.1, 0.5, 180, true, x, y, theta, pub);
-        line(0.1, 0.01, x, y, theta, pub);
-        //ellipse(0.1, 1.25, 0.5, 90, false, x, y, theta, pub);
+        circle(0.1, 0.5, 190, true, x, y, theta, pub);
+        line(0.1, 1, x, y, theta, pub);
+        ellipse(0.1, 1.2, 0.5, 180, false, x, y, theta, pub);
 
 
 

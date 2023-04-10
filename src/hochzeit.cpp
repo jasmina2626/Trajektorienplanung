@@ -46,9 +46,9 @@ int main(int argc, char **argv)
 
     // --------------------> Leader-Koordinaten festlegen zum Spawnen
 
-    float x_leader = 0.884;
-    float y_leader = 0.884;
-    float theta_leader = degreeToRad(120); //in Grad angeben!
+    float x_leader = 2.2;
+    float y_leader = 3.2;
+    float theta_leader = degreeToRad(270); //in Grad angeben!
 
     // -------------------->  Ende der Koordinatenplanung
 
@@ -88,7 +88,6 @@ int main(int argc, char **argv)
         //P2P-Regler
         twistLeader.linear.x = (v(10, currentValLeader.x, currentValLeader.y, targetValLeader.x, targetValLeader.y)) * ((float)(count*count)/1'000'000);
         twistLeader.angular.z = w(10, currentValLeader.x, currentValLeader.y, currentValLeader.theta, targetValLeader.x, targetValLeader.y) * ((float)(count*count)/1'000'000);
-
 
         pubTwistLeader.publish(twistLeader);
 

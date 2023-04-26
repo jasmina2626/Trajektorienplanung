@@ -17,7 +17,7 @@ int circle(float _velocity, float _radius, float _angle, bool _cw, float &x_star
   float x_soll = x_start, y_soll = y_start, theta_soll = theta_start_rad;
   float x_m = 0, y_m = 0;
 
-  float current_angle = 0, angle_preview = 0;  //Benötigt, um die Winkeldifferenz in der while-Schleife zu berechnen
+  float current_angle = 0, previous_angle = 0;  //Benötigt, um die Winkeldifferenz in der while-Schleife zu berechnen
   double t0, t1; //Zeitvariablen --> t0 ist Startzeit
 
 
@@ -54,13 +54,13 @@ int circle(float _velocity, float _radius, float _angle, bool _cw, float &x_star
 
         if (_cw) //Im Uhrzeigersinn
           {
-            theta_soll = theta_soll - current_angle + angle_preview;
+            theta_soll = theta_soll - current_angle + previous_angle;
             x_soll = _radius*cos(-current_angle + theta_start_rad + (M_PI/2)) + x_m;
             y_soll = _radius*sin(-current_angle + theta_start_rad + (M_PI/2)) + y_m;
           }
         else //Gegen den Uhrzeigersinn
           { 
-            theta_soll = theta_soll + current_angle - angle_preview;
+            theta_soll = theta_soll + current_angle - previous_angle;
             x_soll = _radius*cos(current_angle + theta_start_rad - (M_PI/2)) + x_m;
             y_soll = _radius*sin(current_angle + theta_start_rad - (M_PI/2)) + y_m;
 
@@ -90,7 +90,7 @@ int circle(float _velocity, float _radius, float _angle, bool _cw, float &x_star
         ros::spinOnce();
         loop_rate.sleep();
 
-        angle_preview = current_angle;                
+        previous_angle = current_angle;                
     }
 
     relative_angle = 0;

@@ -85,7 +85,7 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
     
 
     float thetaRad = degreeToRad(theta_start); //theta_start wird in Rad in thetaRad gespeichert
-    float current_angle = 0, angle_previous = 0; //Benötigt, um die Winkeldifferenz in der while-Schleife zu berechnen
+    float current_angle = 0, previous_angle = 0; //Benötigt, um die Winkeldifferenz in der while-Schleife zu berechnen
     double t0, t1, m;  //t0 und t1 = Zeitvariablen --> t0 ist Startzeit; m = Steigung an Tangente durch Punkt auf Ellipse
     
 
@@ -107,11 +107,6 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
     //Hilfsvariablen
     int count = 0;
     float omega = 0;
-    
-
-
-    x = _a * cos(thetaRad);
-    y = _b * sin(thetaRad);
     
 
 //Ausgabemöglichkeit
@@ -160,7 +155,7 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
     {
         t1 = ros::Time::now().toSec();
         current_angle = speed_UK * (t1 - t0);  //entspricht aktuellem alpha --> für Um- und Inkreis identisch
-        alpha = alpha + current_angle - angle_previous;
+        alpha = alpha + current_angle - previous_angle;
 
         if(y_calc_ohne_offset != 0) //y = 0 beachten
                 m = - (((x_calc_ohne_offset) * _b * _b) / ((y_calc_ohne_offset) * _a * _a));
@@ -231,7 +226,7 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
           }
 
 
-        angle_previous = current_angle;
+        previous_angle = current_angle;
 
 
         //Soll-Positionen publishen

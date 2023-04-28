@@ -46,9 +46,9 @@ int main(int argc, char **argv)
 
     // --------------------> Leader-Koordinaten festlegen zum Spawnen
 
-    float x_leader = 1;
-    float y_leader = 3;
-    float theta_leader = degreeToRad(90); //in Grad angeben!
+    float x_leader = 3;
+    float y_leader = 1;
+    float theta_leader = degreeToRad(45); //in Grad angeben!
 
     // -------------------->  Ende der Koordinatenplanung
 

@@ -96,8 +96,7 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
 
 
     //Variablen für Rotationsmatrix
-    double x_start_calc = 0, y_start_calc = 0, x_start_calc_rotated = 0, y_start_calc_rotated = 0, x_start_calc_ohne_offset = 0, y_start_calc_ohne_offset = 0;
-    double x_calc_ohne_offset = 0, y_calc_ohne_offset = 0, x_rotated = 0, y_rotated = 0;
+    double x_start_calc = 0, y_start_calc = 0, x_calc_ohne_offset = 0, y_calc_ohne_offset = 0, x_rotated = 0, y_rotated = 0;
 
     //Hilfsvariablen
     int count = 0;
@@ -167,53 +166,39 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
 
 
         /*
-            1. x_start_calc_rotated ist die Start-x-Koordinate bei einer horizontalen Ellipse ohne Offset (d.h. schon rotiert)
-            2. von dort aus die Ellipse theoretisch starten und fahren lassen --> d.h. es braucht keinen Drehwinkel bzw. kein thetaRad --> x"soll" berechnet ohne Offset
-            3. das Ergebnis wieder rotieren
-            4. auf das Ergebnis dann den Offset (MP) addieren
+            1. von einer "horizontalen" Ellipse starten und fahren lassen --> d.h. es braucht keinen Drehwinkel bzw. kein thetaRad 
+                --> x"soll" berechnet ohne Offset
+            2. das Ergebnis wird rotiert
+            3. auf das Ergebnis dann den Offset (MP) addieren
         */
 
         if (_cw) //Im Uhrzeigersinn
-          {            
-            x_start_calc_ohne_offset = _a * cos(thetaRad + M_PI/2);
-            y_start_calc_ohne_offset = _a * sin(thetaRad + M_PI/2);
-                   
+          {
             //1.
-            x_start_calc_rotated = x_start_calc_ohne_offset * sin(thetaRad + M_PI/2) + y_start_calc_ohne_offset * cos(thetaRad + M_PI/2);
-            y_start_calc_rotated = x_start_calc_ohne_offset * sin(thetaRad + M_PI/2) - y_start_calc_ohne_offset * cos(thetaRad + M_PI/2);
-
-            //2.
             x_calc_ohne_offset = _a * cos(-current_angle);
             y_calc_ohne_offset = _b * sin(-current_angle);
-            
-            //3.
+    
+            //2.
             x_rotated = x_calc_ohne_offset * cos(thetaRad + M_PI/2) - y_calc_ohne_offset * sin(thetaRad + M_PI/2);
             y_rotated = x_calc_ohne_offset * sin(thetaRad + M_PI/2) + y_calc_ohne_offset * cos(thetaRad + M_PI/2);
             
-            //4.
+            //3.
             x = x_rotated + x_m;
             y = y_rotated + y_m;
           }
 
 
         else //Gegen den Uhrzeigersinn
-          { 
-            x_start_calc_ohne_offset = _a * cos(thetaRad - M_PI/2);
-            y_start_calc_ohne_offset = _a * sin(thetaRad - M_PI/2);
-                
+          {         
             //1.
-            x_start_calc_rotated = x_start_calc_ohne_offset * sin(thetaRad - M_PI/2) + y_start_calc_ohne_offset * cos(thetaRad - M_PI/2);
-            y_start_calc_rotated = x_start_calc_ohne_offset * sin(thetaRad - M_PI/2) - y_start_calc_ohne_offset * cos(thetaRad - M_PI/2);
-                
-            //2.
             x_calc_ohne_offset = _a * cos(current_angle);
             y_calc_ohne_offset = _b * sin(current_angle);
                 
-            //3.
+            //2.
             x_rotated = x_calc_ohne_offset * cos(thetaRad - M_PI/2) - y_calc_ohne_offset * sin(thetaRad - M_PI/2);
             y_rotated = x_calc_ohne_offset * sin(thetaRad - M_PI/2) + y_calc_ohne_offset * cos(thetaRad - M_PI/2);
                 
-            //4.
+            //3.
             x = x_rotated + x_m;
             y = y_rotated + y_m;
           }
@@ -241,7 +226,7 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
         
 //Ausgabemöglichkeit
         if(count%10000 == 0)
-            std::cout << "x: " << x << "     y: " << y << "     theta: " << radToDegree(theta) << std::endl;
+            //std::cout << "x: " << x << "     y: " << y << "     theta: " << radToDegree(theta) << std::endl;
         
         count++;
     }
@@ -257,8 +242,6 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
     std::cout << "x: " << x << "     y: " << y << "     theta: " << radToDegree(theta) << std::endl;
     std::cout << "xM: " << x_m << "     yM: " << y_m  << std::endl;
     //std::cout << "x_start_calc: " << x_start_calc << "     y_start_calc: " << y_start_calc << std::endl;
-    //std::cout << "x_start_calc_o_o: " << x_start_calc_ohne_offset << "     y_start_calc_o_o: " << y_start_calc_ohne_offset << std::endl;
-    //std::cout << "x_start_calc_ro: " << x_start_calc_rotated << "     y_start_calc_ro: " << y_start_calc_rotated << std::endl;
 
 
 //Anpassen der aktuellen Position --> für nächste Funktion wichtig, da die Werte als Referenz übergeben werden

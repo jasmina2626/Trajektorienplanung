@@ -95,18 +95,12 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
     double speed_UK = 0, speed_IK = 0; //Geschwindigkeit in rad/sec um den Um- und Inkreis zu fahren 
 
 
-    //_angle = wie weit die Ellipse gefahren werden soll
-    float speed = _velocity * (_angle/circumference); //Geschwindigkeit in °/sec um den Kreis zu fahren
-    float angular_speed = speed * 2 * M_PI / 360; //konvertieren in rad/sec
-
-
     //Variablen für Rotationsmatrix
     double x_start_calc = 0, y_start_calc = 0, x_start_calc_rotated = 0, y_start_calc_rotated = 0, x_start_calc_ohne_offset = 0, y_start_calc_ohne_offset = 0;
     double x_calc_ohne_offset = 0, y_calc_ohne_offset = 0, x_rotated = 0, y_rotated = 0;
 
     //Hilfsvariablen
     int count = 0;
-    float omega = 0;
     
 
 //Ausgabemöglichkeit
@@ -147,7 +141,6 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
 
 
     t0 = t1 = ros::Time::now().toSec();
-    omega = thetaRad - M_PI/2;
 
 
     //While-Schleife, um Soll x, y und theta-Werte zu berechnen
@@ -163,13 +156,13 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
 
         //M_PI: genereller "Richtungswechsel" von Tangente (Winkelausgleichen)
         if((y_calc_ohne_offset) > 0) //1.Quadrant + 2. Quadrant
-            theta = atan(m) + M_PI + omega;
+            theta = atan(m) + thetaRad + M_PI/2;
         
-        else if((x_calc_ohne_offset) < 0 && (y_calc_ohne_offset) < 0) //3.Quadrant --> +PI
-            theta = atan(m) + 2*M_PI + omega;
+        else if((x_calc_ohne_offset) < 0 && (y_calc_ohne_offset) < 0) //3.Quadrant
+            theta = atan(m) + thetaRad + (3*M_PI)/2;
         
-        else if((x_calc_ohne_offset) > 0 && (y_calc_ohne_offset) < 0) //4.Quadrant --> (eigentlich -PI)
-            theta = atan(m) + omega;
+        else if((x_calc_ohne_offset) > 0 && (y_calc_ohne_offset) < 0) //4.Quadrant
+            theta = atan(m) + thetaRad - M_PI/2;
 
 
 
@@ -248,7 +241,7 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
         
 //Ausgabemöglichkeit
         if(count%10000 == 0)
-            //std::cout << "x: " << x << "     y: " << y << "     theta: " << radToDegree(theta) << "     omega: " << radToDegree(omega) << std::endl;
+            std::cout << "x: " << x << "     y: " << y << "     theta: " << radToDegree(theta) << std::endl;
         
         count++;
     }

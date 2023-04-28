@@ -74,7 +74,7 @@ double segmentEllipse(const double& a, const double& b, const int& angle, const 
 
 
 
-int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &x_start, float &y_start, float &theta_start, ros::Publisher &chatter_pub)
+int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &x_start, float &y_start, float &theta_start, ros::Publisher &pub)
 {
     std_msgs::String msgString;
     
@@ -96,7 +96,7 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
 
 
     //Variablen für Rotationsmatrix
-    double x_start_calc = 0, y_start_calc = 0, x_calc_ohne_offset = 0, y_calc_ohne_offset = 0, x_rotated = 0, y_rotated = 0;
+    double x_calc_ohne_offset = 0, y_calc_ohne_offset = 0, x_rotated = 0, y_rotated = 0;
 
     //Hilfsvariablen
     int count = 0;
@@ -211,7 +211,7 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
         std::stringstream ss;
         ss << x << "," << y << "," << theta;
         msgString.data = ss.str();
-        chatter_pub.publish(msgString);
+        pub.publish(msgString);
 
 
 
@@ -230,11 +230,6 @@ int ellipse(float _velocity, float _a, float _b, float _angle, bool _cw, float &
         
         count++;
     }
-
-
-    x_start_calc = x_m + _a * cos(thetaRad - M_PI/2);
-    y_start_calc = y_m + _a * sin(thetaRad - M_PI/2);
-
 
 
 //verschiedene Ausgabemöglichkeiten

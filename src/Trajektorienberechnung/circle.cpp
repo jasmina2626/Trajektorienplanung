@@ -1,7 +1,7 @@
 #include "circle.h"
 
 
-int circle(float _velocity, float _radius, float _angle, bool _cw, float &x_start, float &y_start, float &theta_start, ros::Publisher &chatter_pub)
+int circle(float _velocity, float _radius, float _angle, bool _cw, float &x_start, float &y_start, float &theta_start, ros::Publisher &pub)
 {
   std::cout << "Circle" << std::endl;
   
@@ -27,8 +27,6 @@ int circle(float _velocity, float _radius, float _angle, bool _cw, float &x_star
   //_angle = wie weit der Kreis gefahren werden soll
   float speed = _velocity * (_angle/circumference);            //Geschwindigkeit in °/s um Kreis zu fahren
   float angular_speed = speed * 2 * M_PI / 360;                //konvertieren in rad/s
-  float relative_angle = _angle * 2 * M_PI / 360;              //konvertieren in rad/s
-
   
   
   if (_cw) //Im Uhrzeigersinn
@@ -79,7 +77,7 @@ int circle(float _velocity, float _radius, float _angle, bool _cw, float &x_star
         std::stringstream ss;
         ss << x_soll << "," << y_soll << "," << theta_soll;
         msgString.data = ss.str();
-        chatter_pub.publish(msgString);
+        pub.publish(msgString);
 
 
 //Ausgabemöglichkeiten
@@ -92,8 +90,6 @@ int circle(float _velocity, float _radius, float _angle, bool _cw, float &x_star
 
         previous_angle = current_angle;                
     }
-
-    relative_angle = 0;
 
     //Benötigt, damit die nächste Funktion die aktuelle Soll-Position bekommt
     x_start = x_soll;

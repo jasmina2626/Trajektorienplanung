@@ -63,7 +63,7 @@ double segmentEllipse(const double& a, const double& b, const int& angle, const 
     }
 
     //Ausgleichsbedingungen für Definitionslücken von tan() und "Segmentbogenverlängerung"
-    if(angleRad == M_PI/2 || (angleRad < M_PI && angleRad > M_PI/2)) segment = umfangGesamt/4 + segmentBW;// + segmentBackwards; //90° <= Winkel < 180°
+    if(angleRad == M_PI/2 || (angleRad < M_PI && angleRad > M_PI/2)) segment = umfangGesamt/4 + segmentBW; //90° <= Winkel < 180°
     if(angleRad == M_PI || (angleRad < (3*M_PI)/2 && angleRad > M_PI)) segment += umfangGesamt/2; //180° <= Winkel < 270°
     if(angleRad == (3*M_PI)/2 || (angleRad < 2*M_PI && angleRad > (3*M_PI)/2)) segment = (3*umfangGesamt)/4 + segmentBW; //270° <= Winkel < 360°
     if(angleRad == 2*M_PI) segment = umfangGesamt;  //360° = Winkel
